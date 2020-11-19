@@ -28,20 +28,66 @@ public class BinaryHeap {
     }
 
     public void insert(int element) {
-    	// A completer
+    	if (this.pos == this.nodes.length) { // is full
+    	    this.resize();
+        }
+    	// prelocate-up
+    	this.nodes[this.pos] = element;
+    	int child = this.pos;
+    	int father = Math.round((child - 1) / 2);
+        while(this.nodes[child] < this.nodes[father] && child != 0) {
+            this.swap(father, child);
+            child = father;
+            father = Math.round((child - 1) / 2);
+        }
+    	this.pos++;
     }
 
     public int remove() {
-    	// A completer
-    	return 0;
+        if (this.isEmpty()) return Integer.MAX_VALUE;
+    	this.swap(0, this.pos - 1);
+    	int result = this.nodes[this.pos - 1];
+    	this.nodes[this.pos - 1] = Integer.MAX_VALUE;
+    	int father = 0;
+    	int childLeft = father * 2 + 1;
+    	int childRight = father * 2 + 2;
+    	boolean hasChild = childLeft < this.pos || childRight < this.pos;
+    	boolean canSwapLeft = childLeft < this.pos ? this.nodes[childLeft] < this.nodes[father] : false;
+        boolean canSwapRight = childRight < this.pos ? this.nodes[childRight] < this.nodes[father] : false;
+    	while (hasChild && (canSwapLeft || canSwapRight)) {
+    	    if (canSwapLeft && canSwapRight) {
+    	        if (this.nodes[childLeft] <= this.nodes[childRight]) {
+    	            swap(father, childLeft);
+    	            father = childLeft;
+                } else {
+                    swap(father, childRight);
+                    father = childRight;
+                }
+            } else if (canSwapLeft) {
+                    swap(father, childLeft);
+                    father = childLeft;
+            } else if (canSwapRight) {
+                swap(father, childRight);
+                father = childRight;
+            }
+            childLeft = father * 2 + 1;
+            childRight = father * 2 + 2;
+            hasChild = childLeft < this.pos || childRight < this.pos;
+            canSwapLeft = childLeft < this.pos ? this.nodes[childLeft] < this.nodes[father] : false;
+            canSwapRight = childRight < this.pos ? this.nodes[childRight] < this.nodes[father] : false;
+        }
+    	return result;
     }
 
     private int getBestChildPos(int src) {
         if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
             return Integer.MAX_VALUE;
         } else {
-        	// A completer
-        	return Integer.MAX_VALUE;
+            int childLeft = src * 2 + 1;
+            int childRight = src * 2 + 2;
+            if (childRight < this.pos)
+                return childLeft;
+            return this.nodes[childLeft] <= this.nodes[childRight] ? childLeft : childRight;
         }
     }
 
@@ -53,8 +99,9 @@ public class BinaryHeap {
 	 * 
 	 */	
     private boolean isLeaf(int src) {
-    	// A completer
-    	return false;
+    	int childLeft = src * 2 + 1;
+        int childRight = src * 2 + 2;
+        return childLeft >= this.pos && childRight >= this.pos;
     }
 
     private void swap(int father, int child) {
@@ -108,7 +155,12 @@ public class BinaryHeap {
             jarjarBin.insert(rand);            
             k--;
         }
-     // A completer
+        System.out.println("\n" + jarjarBin);
+        jarjarBin.remove();
+        System.out.println("\n" + jarjarBin);
+        jarjarBin.remove();
+        System.out.println("\n" + jarjarBin);
+        jarjarBin.remove();
         System.out.println("\n" + jarjarBin);
         System.out.println(jarjarBin.test());
     }
