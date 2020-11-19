@@ -48,33 +48,13 @@ public class BinaryHeap {
     	this.swap(0, this.pos - 1);
     	int result = this.nodes[this.pos - 1];
     	this.nodes[this.pos - 1] = Integer.MAX_VALUE;
+        this.pos--;
     	int father = 0;
-    	int childLeft = father * 2 + 1;
-    	int childRight = father * 2 + 2;
-    	boolean hasChild = childLeft < this.pos || childRight < this.pos;
-    	boolean canSwapLeft = childLeft < this.pos ? this.nodes[childLeft] < this.nodes[father] : false;
-        boolean canSwapRight = childRight < this.pos ? this.nodes[childRight] < this.nodes[father] : false;
-    	while (hasChild && (canSwapLeft || canSwapRight)) {
-    	    if (canSwapLeft && canSwapRight) {
-    	        if (this.nodes[childLeft] <= this.nodes[childRight]) {
-    	            swap(father, childLeft);
-    	            father = childLeft;
-                } else {
-                    swap(father, childRight);
-                    father = childRight;
-                }
-            } else if (canSwapLeft) {
-                    swap(father, childLeft);
-                    father = childLeft;
-            } else if (canSwapRight) {
-                swap(father, childRight);
-                father = childRight;
-            }
-            childLeft = father * 2 + 1;
-            childRight = father * 2 + 2;
-            hasChild = childLeft < this.pos || childRight < this.pos;
-            canSwapLeft = childLeft < this.pos ? this.nodes[childLeft] < this.nodes[father] : false;
-            canSwapRight = childRight < this.pos ? this.nodes[childRight] < this.nodes[father] : false;
+        int best;
+        while (!isLeaf(father)) {
+    	    best = getBestChildPos(father);
+    	    swap(father, best);
+    	    father = best;
         }
     	return result;
     }
@@ -83,9 +63,9 @@ public class BinaryHeap {
         if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
             return Integer.MAX_VALUE;
         } else {
-            int childLeft = src * 2 + 1;
-            int childRight = src * 2 + 2;
-            if (childRight < this.pos)
+            int childLeft = (src * 2) + 1;
+            int childRight = (src * 2) + 2;
+            if (childRight >= this.pos)
                 return childLeft;
             return this.nodes[childLeft] <= this.nodes[childRight] ? childLeft : childRight;
         }
