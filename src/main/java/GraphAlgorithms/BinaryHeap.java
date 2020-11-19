@@ -114,13 +114,16 @@ public class BinaryHeap {
         } else {
             int left = 2 * root + 1;
             int right = 2 * root + 2;
-            if (right >= pos) {
+            if (right >= pos - 1) {
                 return nodes[left] >= nodes[root] && testRec(left);
             } else {
                 return nodes[left] >= nodes[root] && testRec(left) && nodes[right] >= nodes[root] && testRec(right);
             }
         }
     }
+    // 5 : Au pire des cas :
+    // insert : h -> hauteur de l'arbre
+    // remove : h -> hauteur de l'arbre
 
     public static void main(String[] args) {
         BinaryHeap jarjarBin = new BinaryHeap();

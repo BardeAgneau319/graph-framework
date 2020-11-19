@@ -31,7 +31,15 @@ public class BinaryHeapEdge {
 	 * @param val the edge weight
 	 */
     public void insert(UndirectedNode from, UndirectedNode to, int val) {
-    	// To complete
+		// prelocate-up
+		this.binh.add(new Triple<>(from, to, val));
+		int child = this.binh.size() - 1;
+		int father = Math.round((child - 1) / 2);
+		while(this.binh.get(child).getThird() < this.binh.get(father).getThird() && child != 0) {
+			this.swap(father, child);
+			child = father;
+			father = Math.round((child - 1) / 2);
+		}
     }
 
     
@@ -42,9 +50,18 @@ public class BinaryHeapEdge {
 	 * 
 	 */
     public Triple<UndirectedNode,UndirectedNode,Integer> remove() {
-    	// To complete
-    	return null;
-        
+		if (this.isEmpty()) return null;
+		this.swap(0, this.binh.size() - 1);
+		Triple<UndirectedNode,UndirectedNode,Integer> result = this.binh.get(this.binh.size() - 1);
+		this.binh.remove(this.binh.size() - 1);
+		int father = 0;
+		int best;
+		while (!isLeaf(father)) {
+			best = getBestChildPos(father);
+			swap(father, best);
+			father = best;
+		}
+		return result;
     }
     
 
@@ -55,18 +72,21 @@ public class BinaryHeapEdge {
 	 * @return the index of the child edge with the least weight
 	 */
     private int getBestChildPos(int src) {
-    	int lastIndex = binh.size()-1; 
-        if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
-            return Integer.MAX_VALUE;
-        } else {
-        	// To complete
-        	return Integer.MAX_VALUE;
-        }
+		if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
+			return Integer.MAX_VALUE;
+		} else {
+			int childLeft = (src * 2) + 1;
+			int childRight = (src * 2) + 2;
+			if (childRight >= this.binh.size())
+				return childLeft;
+			return this.binh.get(childLeft).getThird() <= this.binh.get(childRight).getThird() ? childLeft : childRight;
+		}
     }
 
     private boolean isLeaf(int src) {
-    	// A completer
-    	return false;
+		int childLeft = src * 2 + 1;
+		int childRight = src * 2 + 2;
+		return childLeft >= this.binh.size() && childRight >= this.binh.size();
     }
 
     
@@ -159,6 +179,23 @@ public class BinaryHeapEdge {
         }
     }
 
+    // 5 : Sachant que les algorithmes sont identiques, la complexité est la même
+	/* 6 : On commence par l'arrête la plus petite (la première)
+	 et tant qu'on a pas un arbre couvrant (tous les sommets ne sont pas visités)
+	 on va voir les fils et on choisis le plus petit à chaque fois
+	 on retire le père qu'on stocke dans une autre liste et on vérifie si dans cette
+	 deuxième liste tous les sommets ont été visités. On vérifie aussi qu'on n'a pas de cycle :
+	 on ne tombe pas deux fois sur le même sommet dans la nouvelle liste (from ET to)
+
+	 Il nous faudra donc les opérations supplémentaires :
+	 - Vérifier que la nouvelle liste contient tous les sommets
+	 - Vérifier que la nouvelle liste n'a pas deux fois le même sommet
+
+	 La complexité algorithmique est alors :
+	 Vérifier que la nouvelle liste contient tous les sommets + n'a pas deux fois le même sommet -> n
+	 Retirer le plus petit élément à chaque fois : log (n) ou h la hauteur de l'arbre
+	 La complexité est donc au total de log (n) ou h la hauteur de l'arbre
+	 */
     public static void main(String[] args) {
         BinaryHeapEdge jarjarBin = new BinaryHeapEdge();
         System.out.println(jarjarBin.isEmpty()+"\n");
@@ -171,8 +208,13 @@ public class BinaryHeapEdge {
             jarjarBin.insert(new UndirectedNode(k), new UndirectedNode(k+30), rand);            
             k--;
         }
-        // A completer
-        
+		System.out.println("\n" + jarjarBin);
+		jarjarBin.remove();
+		System.out.println("\n" + jarjarBin);
+		jarjarBin.remove();
+		System.out.println("\n" + jarjarBin);
+		jarjarBin.remove();
+		System.out.println("\n" + jarjarBin);
         System.out.println(jarjarBin.test());
     }
 
