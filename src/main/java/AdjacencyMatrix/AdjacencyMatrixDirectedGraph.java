@@ -77,7 +77,7 @@ public class AdjacencyMatrixDirectedGraph extends AbstractMatrixGraph<DirectedNo
 	@Override
 	public boolean isArc(DirectedNode from, DirectedNode to) {
 		int iFrom = from.getLabel();
-		int iTo = from.getLabel();
+		int iTo = to.getLabel();
 		return this.matrix[iFrom][iTo] > 0;
 	}
 

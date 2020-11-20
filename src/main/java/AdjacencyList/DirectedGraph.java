@@ -123,7 +123,7 @@ public class DirectedGraph extends AbstractListGraph<DirectedNode> implements ID
     @Override
     public IDirectedGraph computeInverse() {
         DirectedGraph g = new DirectedGraph(this);
-        for(DirectedNode node : this.getNodes()) {
+        for(DirectedNode node : g.getNodes()) {
             Map<DirectedNode, Integer> pred = node.getPreds();
             node.setPreds(node.getSuccs());
             node.setSuccs(pred);

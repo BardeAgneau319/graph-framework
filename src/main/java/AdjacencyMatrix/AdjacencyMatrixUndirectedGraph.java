@@ -9,6 +9,7 @@ import Abstraction.IUndirectedGraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * This class represents the undirected graphs structured by an adjacency matrix.
