@@ -194,7 +194,9 @@ public class BinaryHeapEdge {
 	 La complexité algorithmique est alors :
 	 Vérifier que la nouvelle liste contient tous les sommets + n'a pas deux fois le même sommet -> n
 	 Retirer le plus petit élément à chaque fois : log (n) ou h la hauteur de l'arbre
-	 La complexité est donc au total de log (n) ou h la hauteur de l'arbre
+	 et répéter cela tant qu'on n'a pas tous les sommets. Dans le pire des cas, on retire toutes les
+	 arrêtes donc :
+	 La complexité est donc au total de n*log(n) ou n*h la hauteur de l'arbre et n le nombre d'arrêtes
 	 */
     public static void main(String[] args) {
         BinaryHeapEdge jarjarBin = new BinaryHeapEdge();
